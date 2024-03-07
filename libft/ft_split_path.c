@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_split.c                                         :+:      :+:    :+:   */
+/*   ft_split_path.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/07 11:42:59 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/07 17:01:48 by molasz-a         ###   ########.fr       */
+/*   Created: 2024/03/07 17:01:56 by molasz-a          #+#    #+#             */
+/*   Updated: 2024/03/07 17:02:11 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,18 +68,19 @@ static int	fill_strs(char **strs, char *s, char c, int words)
 		while (s[i] == c)
 			i++;
 		word_len = count_chars(s + i, c);
-		strs[word] = malloc((word_len + 1) * sizeof (char));
+		strs[word] = malloc((word_len + 2) * sizeof (char));
 		if (!strs[word])
 			return (on_error(strs));
-		strs[word][word_len] = '\0';
+		strs[word][word_len + 1] = '\0';
 		while (s[i] && j < word_len)
 			strs[word][j++] = s[i++];
+		strs[word][j] = '/';
 		word++;
 	}
 	return (0);
 }
 
-char	**ft_split(char *s, char c)
+char	**ft_split_path(char *s, char c)
 {
 	char	**strs;
 	int		words;

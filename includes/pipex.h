@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:32:06 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/07 13:55:36 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/07 16:57:10 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,23 @@
 
 # include "../libft/libft.h"
 # include <unistd.h>
-# include <errno.h>
+# include <fcntl.h>
 # include <stdio.h>
 
-int	child(char **params, char *path, int append);
-int	parent(char **params, char *path, int append);
+typedef struct s_data
+{
+	int		argc;
+	char	**argv;
+	char	**envp;
+	char	**path;
+	int		append;
+	int		*end;
+	int		infile;
+	int		outfile;
+}			t_data;
+
+int	on_error(char *s);
+int	child(t_data *data);
+int	parent(t_data *data);
 
 #endif

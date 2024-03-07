@@ -2,3 +2,5 @@ pipex
 *.o
 *.d
 libft/libft.a
+infile
+outfile
