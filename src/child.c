@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 13:54:32 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/07 20:28:38 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/08 00:32:16 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static void	run_cmd(t_data *data)
 {
 	char	**args;
+	char	*filepath;
 	int		priv;
 	int		i;
 
@@ -22,12 +23,17 @@ static void	run_cmd(t_data *data)
 	i = 0;
 	while (data->path[i])
 	{
-		priv = access(data->path[i], F_OK);
+		filepath = ft_strjoin(data->path[i], args[0]);
+		if (!filepath)
+			on_error("Filepath join", 0);
+		printf("%s\n", filepath);
+		priv = access(filepath, F_OK);
+		free(filepath);
 		if (!priv)
 			break ;
 		i++;
 	}
-	printf("CHILD\n");
+	printf("CHILD %s\n", data->path[i]);
 	if (data->path[i])
 		execve(data->path[i], args, data->envp);
 	else
@@ -36,19 +42,14 @@ static void	run_cmd(t_data *data)
 
 int	child(t_data *data)
 {
-	printf("A\n");
 	if (dup2(data->infile, 0) < 0)
-		on_error("Dup infile");
-	printf("B\n");
+		on_error("Dup infile", 0);
 	if (dup2(data->end[1], 1) < 0)
-		on_error("Dup end[1]");
-	printf("C\n");
+		on_error("Dup end[1]", 0);
 	if (close(data->end[0]) < 0)
-		on_error("Close end[0]");
-	printf("D\n");
+		on_error("Close end[0]", 0);
 	if (close(data->outfile) < 0)
-		on_error("Close outfile");
-	printf("E\n");
+		on_error("Close outfile", 0);
 	run_cmd(data);
 	return (EXIT_SUCCESS);
 }

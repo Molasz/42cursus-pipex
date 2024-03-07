@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:32:06 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/07 16:57:10 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/07 23:42:01 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <stdio.h>
+#include <sys/wait.h>
 
 typedef struct s_data
 {
@@ -31,7 +32,7 @@ typedef struct s_data
 	int		outfile;
 }			t_data;
 
-int	on_error(char *s);
+int	on_error(char *s, int n);
 int	child(t_data *data);
 int	parent(t_data *data);
 

@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 13:52:57 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/07 20:22:27 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/07 23:44:08 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,13 @@ int	parent(t_data *data)
 {
 	printf("PARENT\n");
 	if (dup2(data->outfile, 1) < 0)
-		on_error("Dup infile");
+		on_error("Dup infile", 0);
 	if (dup2(data->end[0], 0) < 0)
-		on_error("Dup end[1]");
+		on_error("Dup end[0]", 0);
 	if (close(data->end[0]) < 0)
-		on_error("Close end[0]");
+		on_error("Close end[0]", 0);
 	if (close(data->outfile) < 0)
-		on_error("Close outfile");
+		on_error("Close outfile", 0);
 	run_cmd(data);
 	return (EXIT_SUCCESS);
 }
