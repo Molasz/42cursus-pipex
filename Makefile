@@ -6,12 +6,13 @@
 #    By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/07 11:16:50 by molasz-a          #+#    #+#              #
-#    Updated: 2024/03/08 16:16:33 by molasz-a         ###   ########.fr        #
+#    Updated: 2024/03/08 19:16:53 by molasz-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS	= pipex.c \
-			childs.c
+			childs.c \
+			utils.c
 
 OPATH	= obj/
 
