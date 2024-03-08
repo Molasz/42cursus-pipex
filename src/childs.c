@@ -6,37 +6,11 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 16:16:05 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/08 19:24:52 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/09 00:12:28 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
-
-static void	run_cmd(t_data *data, char *cmd)
-{
-	char	**args;
-	char	*filepath;
-	int		priv;
-	int		i;
-
-	args = ft_split(cmd, ' ');
-	i = 0;
-	while (data->path[i])
-	{
-		filepath = ft_strjoin(data->path[i], args[0]);
-		if (!filepath)
-			on_error(data, "Strjoin", 0);
-		priv = access(filepath, F_OK);
-		if (!priv)
-			break ;
-		free(filepath);
-		i++;
-	}
-	if (data->path[i])
-		execve(filepath, args, data->envp);
-	else
-		on_error(data, "Error: command not found\n", 1);
-}
 
 void	input(t_data *data)
 {
@@ -53,15 +27,16 @@ void	input(t_data *data)
 
 void	pipes(t_data *data, int cmd)
 {
-	if (dup2(data->end[0], 0) < 0)
+	fprintf(stderr, "PIPE: %s\n", data->argv[cmd + 2]);
+	if (dup2(data->end[0], 1) < 0)
 		on_error(data, "Dup end[0]", 0);
-	if (dup2(data->end[1], 1) < 0)
+	if (dup2(data->end[1], 0) < 0)
 		on_error(data, "Dup end[1]", 0);
 	if (close(data->end[0]) < 0)
 		on_error(data, "Close end[0]", 0);
 	if (close(data->end[1]) < 0)
 		on_error(data, "Close end[1]", 0);
-	run_cmd(data, data->argv[cmd + 1]);
+	run_cmd(data, data->argv[cmd + 2]);
 }
 
 void	output(t_data *data)
