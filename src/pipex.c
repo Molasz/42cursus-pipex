@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:29:28 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/09 00:16:23 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/09 17:39:11 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,41 +43,18 @@ static void	open_files(t_data *data)
 	data->outfile = fd2;
 }
 
-static void	pipe_call(t_data *data, int cmd, int *input_pid)
-{
-	int		status;
-	pid_t	pid;
-	
-	fprintf(stderr, "PIPE\n");
-	pid = fork();
-	if (pid < 0)
-		on_error(data, "Fork pipe", 0);
-	if (!pid)
-		pipes(data, cmd);
-	if (close(data->end[0]) < 0)
-		on_error(data, "Close end[0]", 0);
-	if (close(data->end[1]) < 0)
-		on_error(data, "Close end[1]", 0);
-	waitpid(*input_pid, &status, 0);
-	waitpid(pid, &status, 0);
-	pipe(data->end);
-	*input_pid = pid;
-}
+#ifndef BONUS
 
 static int	pipex(t_data *data)
 {
 	int		end[2];
 	int		status;
 	pid_t	input_pid;
-	pid_t	pipe_pid;
 	pid_t	output_pid;
 
 	data->end = end;
 	pipe(end);
 	input_pid = fork_call(data, input);
-	pipe_pid = 0;
-	while (pipe_pid < data->argc - 4)
-		pipe_call(data, pipe_pid++, &input_pid);
 	output_pid = fork_call(data, output);
 	if (close(data->end[0]) < 0)
 		on_error(data, "Close end[0]", 0);
@@ -93,9 +70,30 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
 
+	data.path = NULL;
+	if (argc != 5)
+		on_error(&data, "Invalid arguments\n", 1);
+	data.argc = argc - 1;
+	data.argv = argv + 1;
+	data.append = 0;
+	data.envp = envp;
+	data.path = get_path(envp);
+	if (!data.path)
+		on_error(&data, "Path", 0);
+	open_files(&data);
+	return (pipex(&data));
+}
+
+#else
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_data	data;
+
+	data.path = NULL;
 	if (argc < 5)
 		on_error(&data, "Invalid arguments\n", 1);
-	if (!ft_strncmp(argv[1], "here_doc", 8))
+	if (!ft_strncmp(argv[1], "here_doc\0", 9))
 	{
 		if (argc == 5)
 			on_error(&data, "Invalid arguments\n", 1);
@@ -114,5 +112,7 @@ int	main(int argc, char **argv, char **envp)
 	if (!data.path)
 		on_error(&data, "Path", 0);
 	open_files(&data);
-	return (pipex(&data));
+	return (pipex_bonus(&data));
 }
+
+#endif

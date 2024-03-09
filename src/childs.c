@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 16:16:05 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/09 00:12:28 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/09 17:15:00 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	input(t_data *data)
 
 void	pipes(t_data *data, int cmd)
 {
-	fprintf(stderr, "PIPE: %s\n", data->argv[cmd + 2]);
 	if (dup2(data->end[0], 1) < 0)
 		on_error(data, "Dup end[0]", 0);
 	if (dup2(data->end[1], 0) < 0)

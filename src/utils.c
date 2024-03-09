@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 19:14:24 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/08 23:56:53 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/09 17:36:14 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,4 +78,3 @@ pid_t	fork_call(t_data *data, void (*f)(t_data *))
 		f(data);
 	return (pid);
 }
-
