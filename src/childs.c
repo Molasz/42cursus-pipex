@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 16:16:05 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/10 20:09:24 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/11 00:08:32 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,12 @@ void	input_child(t_data *data)
 
 void	output_child(t_data *data)
 {
-	fprintf(stderr, "OUTPUT\n");
 	if (dup2(data->outfile, 1) < 0)
 		on_error(data, "Output dup outfile", 0);
 	if (dup2(data->end[0], 0) < 0)
 		on_error(data, "Output dup end[0]", 0);
+	if (close(data->end[1]) < 0)
+		on_error(data, "Output close end[1]", 0);
 	if (close(data->outfile) < 0)
 		on_error(data, "Output close outfile", 0);
 	run_cmd(data, data->argv[data->argc - 2]);

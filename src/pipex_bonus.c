@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 17:15:29 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/10 20:05:43 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/11 00:37:14 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,11 @@ static void	pipe_forks(t_data *data)
 	{
 		pids[0] = pipe_call(data, pipe_pipe2_child, i + 2);
 		if (i + 1 >= data->argc - 4)
+		{
+			dup2(data->end[1], data->end2[0]);
 			break ;
+		}
 		pids[1] = pipe_call(data, pipe_pipe2_child, i + 3);
-		if (close(data->end[1]) < 0)
-			on_error(data, "Parent pipe close end[1]", 0);
 		if (close(data->end2[0]) < 0)
 			on_error(data, "Parent pipe close end2[0]", 0);
 		if (close(data->end2[1]) < 0)
@@ -53,6 +54,10 @@ static void	pipe_forks(t_data *data)
 		fprintf(stderr, "0:%d 1:%d\n", status[0], status[1]);
 		i += 2;
 	}
+	if (close(data->end2[0]) < 0)
+		on_error(data, "Parent pipe close end2[0]", 0);
+	if (close(data->end2[1]) < 0)
+		on_error(data, "Parent pipe close end2[1]", 0);
 }
 
 int	pipex_bonus(t_data *data)
@@ -64,7 +69,10 @@ int	pipex_bonus(t_data *data)
 	pids[0] = fork_call(data, input_child);
 	pipe_forks(data);
 	pids[1] = fork_call(data, output_child);
-	waitpid(pids[0], &status[0], 0);
+	if (close(data->end[0]) < 0)
+		on_error(data, "Close end[0]", 0);
+	if (close(data->end[1]) < 0)
+		on_error(data, "Close end[1]", 0);
 	waitpid(pids[1], &status[1], 0);
 	free_all(data);
 	return (status[1]);

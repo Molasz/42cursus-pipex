@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 19:14:24 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/10 19:56:02 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/11 00:14:45 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	run_cmd(t_data *data, char *cmd)
 	{
 		fprintf(stderr, "RUN:%s\n", filepath);
 		if (execve(filepath, args, data->envp) < 0)
-			on_error(data, "EXECVE", 0);
+			on_error(data, "Execve", 0);
 	}
 	else
 		on_error(data, "Error: command not found\n", 1);
