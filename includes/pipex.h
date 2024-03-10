@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:32:06 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/09 18:54:42 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/10 13:12:03 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,8 @@ typedef struct s_data
 	int		outfile;
 }			t_data;
 
-void	input(t_data *data);
-void	pipes(t_data *data, int cmd);
-void	output(t_data *data);
+void	input_child(t_data *data);
+void	output_child(t_data *data);
 
 void	free_all(t_data *data);
 int		on_error(t_data *data, char *s, int n);
@@ -46,6 +45,9 @@ pid_t	fork_call(t_data *data, void (*f)(t_data *));
 # ifdef BONUS
 
 int		pipex_bonus(t_data *data);
+
+void	pipe_pipe2_child(t_data *data, int cmd);
+void	pipe2_pipe_child(t_data *data, int cmd);
 
 # endif
 

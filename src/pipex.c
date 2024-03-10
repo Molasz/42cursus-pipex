@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:29:28 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/09 17:48:50 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/10 13:11:04 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,12 @@ static void	open_files(t_data *data)
 
 static int	pipex(t_data *data)
 {
-	int		end[2];
 	int		status[2];
 	pid_t	pids[2];
 
-	data->end = end;
-	pipe(end);
-	pids[0] = fork_call(data, input);
-	pids[1] = fork_call(data, output);
+	pipe(data->end);
+	pids[0] = fork_call(data, input_child);
+	pids[1] = fork_call(data, output_child);
 	if (close(data->end[0]) < 0)
 		on_error(data, "Close end[0]", 0);
 	if (close(data->end[1]) < 0)
@@ -68,8 +66,10 @@ static int	pipex(t_data *data)
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
+	int		end[2];
 
 	data.path = NULL;
+	data.end = end;
 	if (argc != 5)
 		on_error(&data, "Invalid arguments\n", 1);
 	data.argc = argc - 1;
@@ -88,24 +88,22 @@ int	main(int argc, char **argv, char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
+	int		end[2];
 
 	data.path = NULL;
+	data.end = end;
 	if (argc < 5)
 		on_error(&data, "Invalid arguments\n", 1);
 	if (!ft_strncmp(argv[1], "here_doc\0", 9))
 	{
 		if (argc == 5)
 			on_error(&data, "Invalid arguments\n", 1);
-		data.argc = argc - 2;
-		data.argv = argv + 2;
 		data.append = 1;
 	}
 	else
-	{
-		data.argc = argc - 1;
-		data.argv = argv + 1;
 		data.append = 0;
-	}
+		data.argc = argc - 1;
+	data.argv = argv + 1;
 	data.envp = envp;
 	data.path = get_path(envp);
 	if (!data.path)
