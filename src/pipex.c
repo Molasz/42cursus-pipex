@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:29:28 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/09 17:39:11 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/09 17:48:50 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,22 +48,21 @@ static void	open_files(t_data *data)
 static int	pipex(t_data *data)
 {
 	int		end[2];
-	int		status;
-	pid_t	input_pid;
-	pid_t	output_pid;
+	int		status[2];
+	pid_t	pids[2];
 
 	data->end = end;
 	pipe(end);
-	input_pid = fork_call(data, input);
-	output_pid = fork_call(data, output);
+	pids[0] = fork_call(data, input);
+	pids[1] = fork_call(data, output);
 	if (close(data->end[0]) < 0)
 		on_error(data, "Close end[0]", 0);
 	if (close(data->end[1]) < 0)
 		on_error(data, "Close end[1]", 0);
-	waitpid(input_pid, &status, 0);
-	waitpid(output_pid, &status, 0);
+	waitpid(pids[0], &status[0], 0);
+	waitpid(pids[1], &status[1], 0);
 	free_all(data);
-	return (status);
+	return (status[1]);
 }
 
 int	main(int argc, char **argv, char **envp)

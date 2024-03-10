@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:32:06 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/09 17:37:31 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/09 18:54:42 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_data
 	char	**path;
 	int		append;
 	int		*end;
+	int		*end2;
 	int		infile;
 	int		outfile;
 }			t_data;
