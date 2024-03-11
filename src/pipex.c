@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:29:28 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/11 00:32:25 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/11 19:12:51 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,8 @@ static void	open_files(t_data *data)
 	data->outfile = fd2;
 }
 
+#ifndef BONUS
+
 static int	pipex(t_data *data)
 {
 	int		status[2];
@@ -60,9 +62,7 @@ static int	pipex(t_data *data)
 	free_all(data);
 	return (status[1]);
 }
-
-#ifndef BONUS
-
+ 
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
@@ -109,8 +109,6 @@ int	main(int argc, char **argv, char **envp)
 	if (!data.path)
 		on_error(&data, "Path", 0);
 	open_files(&data);
-	if (data.argc == 4)
-		return (pipex(&data));
 	return (pipex_bonus(&data));
 }
 
