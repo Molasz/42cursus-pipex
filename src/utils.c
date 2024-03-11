@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 19:14:24 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/11 00:14:45 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/11 17:36:08 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,7 @@ void	run_cmd(t_data *data, char *cmd)
 		if (execve(filepath, args, data->envp) < 0)
 			on_error(data, "Execve", 0);
 	}
-	else
-		on_error(data, "Error: command not found\n", 1);
+	on_error(data, "Error: command not found\n", 1);
 }
 
 pid_t	fork_call(t_data *data, void (*f)(t_data *))

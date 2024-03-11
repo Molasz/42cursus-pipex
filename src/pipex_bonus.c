@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 17:15:29 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/11 16:06:30 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/11 17:33:38 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,12 +48,10 @@ static void	pipe_end(t_data *data, int i, pid_t *pid, int n)
 
 static void	pipe_forks(t_data *data)
 {
-	int		end2[2];
 	int		status;
 	pid_t	pid;
 	int		i;
 
-	data->end2 = end2;
 	i = 0;
 	while (i < data->argc - 4)
 	{
@@ -70,9 +68,11 @@ static void	pipe_forks(t_data *data)
 
 int	pipex_bonus(t_data *data)
 {
+	int		end2[2];
 	int		status[2];
 	pid_t	pids[2];
 
+	data->end2 = end2;
 	pipe(data->end);
 	pids[0] = fork_call(data, input_child);
 	waitpid(pids[0], &status[0], 0);
@@ -82,17 +82,11 @@ int	pipex_bonus(t_data *data)
 	{
 		if (close(data->end2[1]) < 0)
 			on_error(data, "Parent end close end2[1]", 0);
-		/*
-		if (close(data->end2[0]) < 0)
-			on_error(data, "Parent end close end2[0]", 0);
-			*/
 	}
 	else
 	{
 		if (close(data->end[1]) < 0)
 			on_error(data, "Parent end close end[1]", 0);
-		if (close(data->end[0]) < 0)
-			on_error(data, "Parent end close end[0]", 0);
 	}
 	waitpid(pids[1], &status[1], 0);
 	free_all(data);
