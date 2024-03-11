@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 16:16:05 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/11 00:08:32 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/11 01:13:56 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ void	output_child(t_data *data)
 
 void	pipe_pipe2_child(t_data *data, int cmd)
 {
+	fprintf(stderr, "PIPE->PIPE2\n");
 	if (dup2(data->end[0], 0) < 0)
 		on_error(data, "Child pipe->pipe2 dup end[0]", 0);
 	if (dup2(data->end2[1], 1) < 0)
@@ -55,6 +56,7 @@ void	pipe_pipe2_child(t_data *data, int cmd)
 
 void	pipe2_pipe_child(t_data *data, int cmd)
 {
+	fprintf(stderr, "PIPE2->PIPE\n");
 	if (dup2(data->end2[0], 0) < 0)
 		on_error(data, "Child pipe2->pipe dup end2[0]", 0);
 	if (dup2(data->end[1], 1) < 0)
