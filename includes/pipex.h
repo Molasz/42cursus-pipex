@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:32:06 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/10 13:12:03 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/11 15:35:18 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ int		pipex_bonus(t_data *data);
 
 void	pipe_pipe2_child(t_data *data, int cmd);
 void	pipe2_pipe_child(t_data *data, int cmd);
+void	output_child_bonus(t_data *data, int n);
 
 # endif
 
