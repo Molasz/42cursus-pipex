@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 19:14:24 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/11 17:36:08 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/12 00:13:23 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ void	run_cmd(t_data *data, char *cmd)
 	}
 	if (data->path[i])
 	{
-		fprintf(stderr, "RUN:%s\n", filepath);
 		if (execve(filepath, args, data->envp) < 0)
 			on_error(data, "Execve", 0);
 	}

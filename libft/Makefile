@@ -6,7 +6,7 @@
 #    By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/07 11:35:53 by molasz-a          #+#    #+#              #
-#    Updated: 2024/03/08 00:22:25 by molasz-a         ###   ########.fr        #
+#    Updated: 2024/03/12 00:39:51 by molasz-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,9 @@ SRCS	= ft_strlen.c \
 			ft_strncmp.c \
 			ft_strjoin.c \
 			ft_split.c \
-			ft_split_path.c
+			ft_split_path.c \
+			get_next_line.c \
+			get_next_line_utils.c
 
 OBJS	= ${SRCS:.c=.o}
 

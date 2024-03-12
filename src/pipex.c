@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:29:28 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/11 19:12:51 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/12 01:22:12 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,19 @@ static void	open_files(t_data *data)
 	int		fd1;
 	int		fd2;
 
-	fd1 = open(data->argv[0], O_RDONLY);
-	if (data->append)
-		fd2 = open(data->argv[data->argc - 1], O_CREAT | O_APPEND, 0644);
-	else
+	if (!data->here_doc)
+	{
+		fd1 = open(data->argv[0], O_RDONLY);
+		if (fd1 < 0)
+			on_error(data, "Open infile", 0);
 		fd2 = open(data->argv[data->argc - 1], O_CREAT | O_RDWR | O_TRUNC,
 				0644);
-	if (fd1 < 0)
-		on_error(data, "Open infile", 0);
+	}
+	else
+	{
+		fd1 = 0;
+		fd2 = open(data->argv[data->argc - 1], O_CREAT | O_APPEND, 0644);
+	}
 	if (fd2 < 0)
 		on_error(data, "Open outfile", 0);
 	data->infile = fd1;
@@ -60,7 +65,7 @@ static int	pipex(t_data *data)
 	waitpid(pids[0], &status[0], 0);
 	waitpid(pids[1], &status[1], 0);
 	free_all(data);
-	return (status[1]);
+	return (0);
 }
  
 int	main(int argc, char **argv, char **envp)
@@ -69,12 +74,12 @@ int	main(int argc, char **argv, char **envp)
 	int		end[2];
 
 	data.path = NULL;
-	data.end = end;
 	if (argc != 5)
 		on_error(&data, "Invalid arguments\n", 1);
+	data.here_doc = 0;
+	data.end = end;
 	data.argc = argc - 1;
 	data.argv = argv + 1;
-	data.append = 0;
 	data.envp = envp;
 	data.path = get_path(envp);
 	if (!data.path)
@@ -88,22 +93,24 @@ int	main(int argc, char **argv, char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
-	int		end[2];
 
 	data.path = NULL;
-	data.end = end;
 	if (argc < 5)
 		on_error(&data, "Invalid arguments\n", 1);
 	if (!ft_strncmp(argv[1], "here_doc\0", 9))
 	{
 		if (argc == 5)
 			on_error(&data, "Invalid arguments\n", 1);
-		data.append = 1;
+		data.here_doc = 1;
+		data.argc = argc - 2;
+		data.argv = argv + 2;
 	}
 	else
-		data.append = 0;
-	data.argc = argc - 1;
-	data.argv = argv + 1;
+	{
+		data.here_doc = 0;
+		data.argc = argc - 1;
+		data.argv = argv + 1;
+	}
 	data.envp = envp;
 	data.path = get_path(envp);
 	if (!data.path)

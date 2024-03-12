@@ -6,7 +6,7 @@
 #    By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/07 11:16:50 by molasz-a          #+#    #+#              #
-#    Updated: 2024/03/09 17:13:59 by molasz-a         ###   ########.fr        #
+#    Updated: 2024/03/12 00:10:29 by molasz-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ SRCS	= pipex.c \
 			childs.c \
 			utils.c
 
-BSRCS	= pipex_bonus.c
+BSRCS	= pipex_bonus.c \
+			here_doc_bonus.c
 
 OPATH	= obj/
 

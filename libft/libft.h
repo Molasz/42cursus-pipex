@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:43:39 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/08 00:22:15 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/12 00:37:42 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 # define LIBFT_H
 
-# include <stdio.h> 
+# include <stdio.h>
 # include <stdlib.h>
+# include "get_next_line.h"
 
 int		ft_strlen(char *s);
 int		ft_strncmp(char *s1, char *s2, int n);
