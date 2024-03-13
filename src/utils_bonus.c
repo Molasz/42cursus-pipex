@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
+/*   By: molasz-a <molasz-a@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/13 14:34:37 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/13 16:23:48 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/13 16:53:42 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ void	here_doc(t_data *data)
 {
 	char	*line;
 
-	pipe(data->end);
+	if (pipe(data->end))
+		on_error(data, "Pipe", 0);
 	write(1, "pipe heredoc> ", 14);
 	while (1)
 	{

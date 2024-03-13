@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:29:28 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/13 14:51:57 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/13 16:50:26 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ static int	pipex(t_data *data)
 	int		status[2];
 	pid_t	pids[2];
 
-	pipe(data->end);
+	if (pipe(data->end) < 0)
+		on_error(data, "Pipe", 0);
 	pids[0] = fork_call(data, input_child);
 	pids[1] = fork_call(data, output_child);
 	if (close(data->end[0]) < 0)

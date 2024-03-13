@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 17:15:29 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/13 16:42:38 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/13 16:52:43 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static void	cmd_forks(t_data *data)
 	i = 0;
 	while (++i < data->argc - 2)
 	{
-		pipe(data->end);
+		if (pipe(data->end) < 0)
+			on_error(data, "Pipe", 0);
 		if (i == 1 && data->infile < 0)
 		{
 			if (dup2(data->end[0], 0) < 0)
