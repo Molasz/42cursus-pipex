@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:29:28 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/13 16:50:26 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/13 19:57:37 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,24 +19,28 @@ static void	open_files(t_data *data)
 
 	fd1 = open(data->argv[0], O_RDONLY);
 	if (fd1 < 0)
-		on_error(data, "Open infile", 0);
+		perror("Infile");
 	fd2 = open(data->argv[data->argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd2 < 0)
-		on_error(data, "Open outfile", 0);
+		on_error(data, "Outfile", 0);
 	data->infile = fd1;
 	data->outfile = fd2;
 }
 
 static void	input_child(t_data *data)
 {
-	if (dup2(data->infile, 0) < 0)
-		on_error(data, "Input dup infile", 0);
+
+	if (data->infile > 0)
+	{
+		if (dup2(data->infile, 0) < 0)
+			on_error(data, "Input dup infile", 0);
+		if (close(data->infile) < 0)
+			on_error(data, "Input close infile", 0);
+	}
 	if (dup2(data->end[1], 1) < 0)
 		on_error(data, "Input dup end[1]", 0);
 	if (close(data->end[0]) < 0)
 		on_error(data, "Input close end[0]", 0);
-	if (close(data->infile) < 0)
-		on_error(data, "Input close infile", 0);
 	run_cmd(data, data->argv[1]);
 }
 
@@ -50,7 +54,6 @@ static void	output_child(t_data *data)
 		on_error(data, "Output close end[1]", 0);
 	if (close(data->outfile) < 0)
 		on_error(data, "Output close outfile", 0);
-	run_cmd(data, data->argv[data->argc - 2]);
 }
 
 static int	pipex(t_data *data)

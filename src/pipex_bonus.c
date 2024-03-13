@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 17:15:29 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/13 18:49:53 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/13 19:54:58 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void	write_output(t_data *data)
 	data->outfile = open(data->argv[data->argc - 1], O_CREAT | O_RDWR | O_TRUNC,
 			0644);
 	if (data->outfile < 0)
-		on_error(data, "Open outfile", 0);
+		on_error(data, "Outfile", 0);
 	if (dup2(data->outfile, 1) < 0)
 		on_error(data, "Output dup outfile", 0);
 	if (close(data->outfile) < 0)
