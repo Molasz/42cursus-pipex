@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 17:15:29 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/13 16:52:43 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/13 18:49:53 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ static void	write_output(t_data *data)
 static int	pipex_bonus(t_data *data)
 {
 	int	status;
-	int	save_status;
 	int	i;
 
 	dup_infile(data);
@@ -79,15 +78,10 @@ static int	pipex_bonus(t_data *data)
 	if (data->infile < 0)
 		i = 1;
 	status = 0;
-	save_status = 0;
 	while (i++ < data->argc - 2)
-	{
 		waitpid(-1, &status, 0);
-		if (status)
-			save_status = status;
-	}
 	free_all(data);
-	return (save_status);
+	return (status);
 }
 
 int	main(int argc, char **argv, char **envp)

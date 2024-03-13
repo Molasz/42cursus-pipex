@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 19:14:24 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/13 16:23:56 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/13 18:47:09 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	on_error(t_data *data, char *s, int n)
 	if (!n)
 		exit(errno);
 	else
-		exit(EXIT_FAILURE);
+		exit(1);
 }
 
 char	**get_path(char **envp)
