@@ -6,90 +6,113 @@
 /*   By: molasz-a <molasz-a@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 17:15:29 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/12 01:14:38 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/13 16:42:38 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
 
-#ifdef BONUS
-
-static pid_t	pipe_call(t_data *data, void (*f)(t_data *, int), int cmd)
+static void	cmd_forks(t_data *data)
 {
-	pid_t	pid;
-
-	pid = fork();
-	if (pid < 0)
-		on_error(data, "Fork pipe", 0);
-	if (!pid)
-		f(data, cmd);
-	return (pid);
-}
-
-static void	pipe_end(t_data *data, int i, pid_t *pid, int n)
-{
-	if (!n)
-	{
-		pipe(data->end2);
-		*pid = pipe_call(data, pipe_pipe2_child, i + 2);
-		if (close(data->end[1]) < 0)
-			on_error(data, "Parent pipe close end[1]", 0);
-	}
-	else
-	{
-		pipe(data->end);
-		*pid = pipe_call(data, pipe2_pipe_child, i + 2);
-		if (close(data->end2[1]) < 0)
-			on_error(data, "Parent pipe close end2[1]", 0);
-	}
-}
-
-static void	pipe_forks(t_data *data)
-{
-	int		status;
-	pid_t	pid;
-	int		i;
+	int	i;
 
 	i = 0;
-	while (i < data->argc - 4)
+	while (++i < data->argc - 2)
 	{
-		pipe_end(data, i, &pid, i % 2);
-		waitpid(pid, &status, 0);
-		i++;
-	}
-	if (i % 2)
-	{
-		if (close(data->end[0]) < 0)
-			on_error(data, "Pipe on end close end[0]", 0);
+		pipe(data->end);
+		if (i == 1 && data->infile < 0)
+		{
+			if (dup2(data->end[0], 0) < 0)
+				on_error(data, "Parent dup end[0]", 0);
+			if (close(data->end[1]) < 0)
+				on_error(data, "Parent close end[1]", 0);
+			continue ;
+		}
+		fork_bonus(data, i);
 	}
 }
 
-int	pipex_bonus(t_data *data)
+static void	dup_infile(t_data *data)
 {
-	int		status[2];
-	pid_t	pids[2];
-
-	pipe(data->end);
+	data->infile = 0;
 	if (data->here_doc)
-		pids[0] = fork_call(data, here_doc);
-	else
-		pids[0] = fork_call(data, input_child);
-	waitpid(pids[0], &status[0], 0);
-	pipe_forks(data);
-	pids[1] = pipe_call(data, output_child_bonus, data->argc % 2);
-	if (data->argc % 2)
-	{
-		if (close(data->end2[1]) < 0)
-			on_error(data, "Parent end close end2[1]", 0);
-	}
+		here_doc(data);
 	else
 	{
-		if (close(data->end[1]) < 0)
-			on_error(data, "Parent end close end[1]", 0);
+		data->infile = open(data->argv[0], O_RDONLY);
+		if (data->infile < 0)
+			perror("Infile");
+		else
+		{
+			if (dup2(data->infile, 0) < 0)
+				on_error(data, "Input dup infile", 0);
+			if (close(data->infile) < 0)
+				on_error(data, "Input close infile", 0);
+		}
 	}
-	waitpid(pids[1], &status[1], 0);
-	free_all(data);
-	return (status[1]);
 }
 
-#endif
+static void	write_output(t_data *data)
+{
+	data->outfile = open(data->argv[data->argc - 1], O_CREAT | O_RDWR | O_TRUNC,
+			0644);
+	if (data->outfile < 0)
+		on_error(data, "Open outfile", 0);
+	if (dup2(data->outfile, 1) < 0)
+		on_error(data, "Output dup outfile", 0);
+	if (close(data->outfile) < 0)
+		on_error(data, "Output close outfile", 0);
+	run_cmd(data, data->argv[data->argc - 2]);
+}
+
+static int	pipex_bonus(t_data *data)
+{
+	int	status;
+	int	save_status;
+	int	i;
+
+	dup_infile(data);
+	cmd_forks(data);
+	fork_call(data, write_output);
+	i = 0;
+	if (data->infile < 0)
+		i = 1;
+	status = 0;
+	save_status = 0;
+	while (i++ < data->argc - 2)
+	{
+		waitpid(-1, &status, 0);
+		if (status)
+			save_status = status;
+	}
+	free_all(data);
+	return (save_status);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	t_data	data;
+
+	data.path = NULL;
+	if (argc < 5)
+		on_error(&data, "Invalid arguments\n", 1);
+	if (!ft_strncmp(argv[1], "here_doc\0", 9))
+	{
+		if (argc == 5)
+			on_error(&data, "Invalid arguments\n", 1);
+		data.here_doc = 1;
+		data.argc = argc - 2;
+		data.argv = argv + 2;
+	}
+	else
+	{
+		data.here_doc = 0;
+		data.argc = argc - 1;
+		data.argv = argv + 1;
+	}
+	data.envp = envp;
+	data.path = get_path(envp);
+	if (!data.path)
+		on_error(&data, "Path", 0);
+	return (pipex_bonus(&data));
+}

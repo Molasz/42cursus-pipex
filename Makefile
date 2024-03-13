@@ -6,16 +6,16 @@
 #    By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/07 11:16:50 by molasz-a          #+#    #+#              #
-#    Updated: 2024/03/12 00:10:29 by molasz-a         ###   ########.fr        #
+#    Updated: 2024/03/13 15:56:56 by molasz-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS	= pipex.c \
-			childs.c \
 			utils.c
 
 BSRCS	= pipex_bonus.c \
-			here_doc_bonus.c
+			utils_bonus.c \
+			utils.c
 
 OPATH	= obj/
 
@@ -60,8 +60,8 @@ else
 obj/%.o:	src/%.c Makefile
 				${CC} ${CFLAGS} -c $< -MMD -o $@ -D BONUS=1
 
-${NAME}:	${OBJS} ${BOBJS} dir
-				${CC} ${CFLAGS} ${OBJS} ${BOBJS} ${LIBFT} -o ${NAME}
+${NAME}:	${BOBJS} dir
+				${CC} ${CFLAGS} ${BOBJS} ${LIBFT} -o ${NAME}
 
 endif
 

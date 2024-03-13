@@ -6,49 +6,52 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:29:28 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/12 01:22:12 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/13 14:51:57 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/pipex.h"
-
-static char	**get_path(char **envp)
-{
-	char	**path;
-	int		i;
-
-	i = 0;
-	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
-		i++;
-	path = ft_split_path(&envp[i][5], ':');
-	return (path);
-}
 
 static void	open_files(t_data *data)
 {
 	int		fd1;
 	int		fd2;
 
-	if (!data->here_doc)
-	{
-		fd1 = open(data->argv[0], O_RDONLY);
-		if (fd1 < 0)
-			on_error(data, "Open infile", 0);
-		fd2 = open(data->argv[data->argc - 1], O_CREAT | O_RDWR | O_TRUNC,
-				0644);
-	}
-	else
-	{
-		fd1 = 0;
-		fd2 = open(data->argv[data->argc - 1], O_CREAT | O_APPEND, 0644);
-	}
+	fd1 = open(data->argv[0], O_RDONLY);
+	if (fd1 < 0)
+		on_error(data, "Open infile", 0);
+	fd2 = open(data->argv[data->argc - 1], O_CREAT | O_RDWR | O_TRUNC, 0644);
 	if (fd2 < 0)
 		on_error(data, "Open outfile", 0);
 	data->infile = fd1;
 	data->outfile = fd2;
 }
 
-#ifndef BONUS
+static void	input_child(t_data *data)
+{
+	if (dup2(data->infile, 0) < 0)
+		on_error(data, "Input dup infile", 0);
+	if (dup2(data->end[1], 1) < 0)
+		on_error(data, "Input dup end[1]", 0);
+	if (close(data->end[0]) < 0)
+		on_error(data, "Input close end[0]", 0);
+	if (close(data->infile) < 0)
+		on_error(data, "Input close infile", 0);
+	run_cmd(data, data->argv[1]);
+}
+
+static void	output_child(t_data *data)
+{
+	if (dup2(data->outfile, 1) < 0)
+		on_error(data, "Output dup outfile", 0);
+	if (dup2(data->end[0], 0) < 0)
+		on_error(data, "Output dup end[0]", 0);
+	if (close(data->end[1]) < 0)
+		on_error(data, "Output close end[1]", 0);
+	if (close(data->outfile) < 0)
+		on_error(data, "Output close outfile", 0);
+	run_cmd(data, data->argv[data->argc - 2]);
+}
 
 static int	pipex(t_data *data)
 {
@@ -67,17 +70,15 @@ static int	pipex(t_data *data)
 	free_all(data);
 	return (0);
 }
- 
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
-	int		end[2];
 
 	data.path = NULL;
 	if (argc != 5)
 		on_error(&data, "Invalid arguments\n", 1);
 	data.here_doc = 0;
-	data.end = end;
 	data.argc = argc - 1;
 	data.argv = argv + 1;
 	data.envp = envp;
@@ -87,36 +88,3 @@ int	main(int argc, char **argv, char **envp)
 	open_files(&data);
 	return (pipex(&data));
 }
-
-#else
-
-int	main(int argc, char **argv, char **envp)
-{
-	t_data	data;
-
-	data.path = NULL;
-	if (argc < 5)
-		on_error(&data, "Invalid arguments\n", 1);
-	if (!ft_strncmp(argv[1], "here_doc\0", 9))
-	{
-		if (argc == 5)
-			on_error(&data, "Invalid arguments\n", 1);
-		data.here_doc = 1;
-		data.argc = argc - 2;
-		data.argv = argv + 2;
-	}
-	else
-	{
-		data.here_doc = 0;
-		data.argc = argc - 1;
-		data.argv = argv + 1;
-	}
-	data.envp = envp;
-	data.path = get_path(envp);
-	if (!data.path)
-		on_error(&data, "Path", 0);
-	open_files(&data);
-	return (pipex_bonus(&data));
-}
-
-#endif

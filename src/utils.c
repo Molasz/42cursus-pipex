@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/08 19:14:24 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/12 00:13:23 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/13 16:23:56 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,18 @@ int	on_error(t_data *data, char *s, int n)
 		exit(errno);
 	else
 		exit(EXIT_FAILURE);
+}
+
+char	**get_path(char **envp)
+{
+	char	**path;
+	int		i;
+
+	i = 0;
+	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
+		i++;
+	path = ft_split_path(&envp[i][5], ':');
+	return (path);
 }
 
 void	run_cmd(t_data *data, char *cmd)
