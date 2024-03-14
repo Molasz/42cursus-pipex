@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/07 11:29:28 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/13 19:57:37 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/14 12:48:49 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ static void	output_child(t_data *data)
 		on_error(data, "Output close end[1]", 0);
 	if (close(data->outfile) < 0)
 		on_error(data, "Output close outfile", 0);
+	run_cmd(data, data->argv[data->argc - 2]);
 }
 
 static int	pipex(t_data *data)
