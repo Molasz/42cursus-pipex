@@ -6,7 +6,7 @@
 /*   By: molasz-a <molasz-a@student.42barcelona.co  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/09 17:15:29 by molasz-a          #+#    #+#             */
-/*   Updated: 2024/03/17 15:19:03 by molasz-a         ###   ########.fr       */
+/*   Updated: 2024/03/17 15:55:56 by molasz-a         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ static void	write_output(t_data *data)
 
 static int	pipex(t_data *data)
 {
-	int		i;
+	int	status;
+	int	i;
 
 	dup_infile(data);
 	cmd_forks(data);
@@ -80,6 +81,9 @@ static int	pipex(t_data *data)
 	i = 0;
 	if (data->infile < 0)
 		i = 1;
+	status = 0;
+	while (i++ < data->argc - 2)
+		waitpid(-1, &status, 0);
 	free_all(data);
 	return (0);
 }
