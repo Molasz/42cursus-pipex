@@ -6,26 +6,19 @@
 #    By: molasz-a <molasz-a@student.42barcel>       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/07 11:16:50 by molasz-a          #+#    #+#              #
-#    Updated: 2024/03/13 15:56:56 by molasz-a         ###   ########.fr        #
+#    Updated: 2024/03/17 14:53:52 by molasz-a         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS	= pipex.c \
-			utils.c
-
-BSRCS	= pipex_bonus.c \
-			utils_bonus.c \
-			utils.c
+			utils.c \
+			utils_bonus.c
 
 OPATH	= obj/
 
 OBJS	= ${addprefix ${OPATH}, ${SRCS:.c=.o}}
 
-BOBJS	= ${addprefix ${OPATH}, ${BSRCS:.c=.o}}
-
 DEPS	= ${addprefix ${OPATH}, ${SRCS:.c=.d}}
-
-BDEPS	= ${addprefix ${OPATH}, ${BSRCS:.c=.d}}
 
 NAME	= pipex
 
@@ -39,31 +32,15 @@ LIBFT	= libft/libft.a
 
 all:		dir ${NAME}
 
-bonus:
-				make BONUS=1 all
-
 dir:
 				mkdir -p obj
 				make -C libft
-
-
-ifndef BONUS
 
 obj/%.o:	src/%.c Makefile
 				${CC} ${CFLAGS} -c $< -MMD -o $@
 
 ${NAME}:	${OBJS} dir
 				${CC} ${CFLAGS} ${OBJS} ${LIBFT} -o ${NAME}
-
-else
-
-obj/%.o:	src/%.c Makefile
-				${CC} ${CFLAGS} -c $< -MMD -o $@ -D BONUS=1
-
-${NAME}:	${BOBJS} dir
-				${CC} ${CFLAGS} ${BOBJS} ${LIBFT} -o ${NAME}
-
-endif
 
 clean:
 				make -C libft fclean
@@ -74,6 +51,4 @@ fclean:		clean
 
 re:			fclean all
 
--include ${DEPS} ${BDEPS}
-
-.PHONY:		all clean fclean re bonus
+.PHONY:		all clean fclean re
